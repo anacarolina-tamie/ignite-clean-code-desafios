@@ -1,28 +1,27 @@
-// Essa função tem o objetivo de registrar um novo usuário no banco.
-async function register(data) {
-  // Desestrutura os dados recebidos.
-  const { email, name, avatar } = data
+function isEmailAlreadyUsed(email) {
+  const userWithEmail = getUserByEmail(email);
 
-  // Verifica se o avatar foi informado.
-  if (!avatar) return { error: 'avatar is required' }
+  return Boolean(userWithThisEmail);
+}
 
-  // Verifica se o nome foi informado.
-  if(!name) return { error: 'name is required' }
+async function registerUser(userData) {
 
-  // Essa função retorna o usuário a partir do email informado
-  const userMail = getUserByEmail(email)
+  const { email, name, avatar } = userData
 
-  // Verificação se o email informado já foi utilizado por algum usuário.
-  if (userMail) {
-    return { error: 'email already used' }
+  if (!avatar) return { error: 'avatar is required' };
+  if(!name) return { error: 'name is required' };
+  if(!email) return {error: 'email is required'};
+
+  if (isEmailAlreadyUsed) {
+    return {error: 'emails already used'}; 
   }
 
-  // Essa função realiza a conversão das imagens para JPG a fim de evitar erros de incompatibilidade.
-  // Mais informações na issue https://github.com/rocketseat-education/example-repository/issues/1
-  const avatar2 = convertImageToJPG(avatar)
+  const convertedAvatar = convertImageToJPG(avatar);
 
-  // Cria o usuário no banco de dados
-  const user = await createUser({ email, name, avatar: avatar2 })
+  const newUser = await createUser({ 
+    email, 
+    name, 
+    avatar: convertedAvatar })
 
-  return { user }
+  return { user: newUser };
 }
